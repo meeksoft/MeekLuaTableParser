@@ -1,0 +1,77 @@
+<html>
+<head>
+	<title></title>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/start/jquery-ui.css" /> 
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="MeekLuaTableParser.js"></script>
+    <script type="text/javascript">
+    var reader;
+
+	$(function() {
+		if (window.File && window.FileReader && window.FileList && window.Blob) {} else {
+			alert('The File APIs are not fully supported by your browser.');
+			return;
+		}
+
+		reader = new FileReader();
+		  
+		// Setup callback functions:
+		reader.onprogress = updateProgress;
+		reader.onload = loaded;
+		reader.onerror = errorHandler;
+		      
+	    var OSName="Unknown OS";
+		if (navigator.appVersion.indexOf("Win")!=-1) OSName="Windows";
+		if (navigator.appVersion.indexOf("Mac")!=-1) OSName="MacOS";
+		if (navigator.appVersion.indexOf("X11")!=-1) OSName="UNIX";
+		if (navigator.appVersion.indexOf("Linux")!=-1) OSName="Linux";
+
+		$( "#dialog-message" ).dialog({
+		  modal: true,
+		  buttons: {
+		    Ok: function() {
+		      $( this ).dialog( "close" );
+		      $("#fileInput").click();
+		    }
+		  }
+		});
+
+		$("#fileInput").on('change',prepareUpload);
+	});
+
+	function prepareUpload() {
+		var file = $("#fileInput").prop('files');
+
+		reader.readAsText(file[0]); 
+	}
+
+	function updateProgress(e) {
+	}
+	function loaded(e) {
+		var text = reader.result;
+		var mltp = new MeekLuaTableParser();
+		//var test = mltp.toJSONString(text);console.log(test);
+		var json = mltp.toJSON(text);
+		//console.log(json);
+	}
+	function errorHandler(e) {
+	}
+    </script>
+</head>
+<body>
+
+<div id="dialog-message" title="Select file.">
+  <p>
+    <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+    Please select your <b>MeekArtisian.lua</b> saved variables file.
+  </p>
+  <p>
+    You may have to allow popups.
+  </p>
+</div>
+
+<input id="fileInput" type="file" style="visibility:hidden;"/> 
+ 
+</body>
+</html>
