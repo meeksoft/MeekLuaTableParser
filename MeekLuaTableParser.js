@@ -52,8 +52,10 @@ MeekLuaTableParser.prototype.replaceDigitKeyBrackets= function(match, p1, offset
 MeekLuaTableParser.prototype.encloseNonDigitValuesWithQuotes= function(match, p1, offset, string){
 	trim = p1.replace(/(^,)|(,$)/g, "")  //Locate comma, and remove it.
 	//console.log(trim);
-	if (isNaN(trim))
+	if(trim.match(/"(.*?)"/)) return ': '+trim+',';  //Already enclosed in quotes, so put back comma.
+	if (isNaN(trim)) {
+		if(trim.match(/\[\[(.*?)\]\]/)) trim = trim.substring(2, trim.length-2);//ESO enclosed string values with double brackets.
 		return ': "'+trim+'",';  //Enclose quotes, and put back comma.
-	else
+	} else
 		return ': '+p1;  //Comma is still there.
 }
