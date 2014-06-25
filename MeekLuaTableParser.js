@@ -20,7 +20,7 @@ MeekLuaTableParser.prototype.toJSONString = function(str) {
 	str = str.replace(/" :/g,'":'); //Remove extra space?
 	str = str.replace(/,\s*\n(\s*)}/g, "\n}"); //Remove trailing commas.
 	//str = str.replace(/\//g,"\/\/");  //Escape slashes.
-	return '['+str+']';  //Place all tables into an array.
+	return '{'+str+'}';  //Wrap all tables.
 }
 
 //Enclose the table with curly brackets, and enclose the header with quotes.
@@ -30,12 +30,12 @@ MeekLuaTableParser.prototype.handleMultipleTables= function(str){
 	//console.log(str.match(/[^|\n](.*)=\n/g));  //Locate Headers
 	//console.log(str.match(/\n\}/g));  //Locate end of table
 	str = str.replace(/([^|\n])(.*)(=\n)/g,this.encloseHeaders);  //Locate Headers
-	str = str.replace(/\n\}/g,"\n}},");  //Locate end of table
+	str = str.replace(/\n\}/g,"\n},");  //Locate end of table
 	str = str.replace(/,(?=[^,]*$)/, '');  //Chop last comma
 	return str;
 }
 MeekLuaTableParser.prototype.encloseHeaders= function(match, p1, p2, p3, offset, string){
-	console.log(p1);console.log(p2);console.log(p3);
+	//console.log(p1);console.log(p2);console.log(p3);
     p1 = p1.replace(/^\s+/, '');//Remove any leading spaces.
     //Remove any trailing spaces
 	for (var i = p2.length - 1; i >= 0; i--) {
@@ -44,7 +44,7 @@ MeekLuaTableParser.prototype.encloseHeaders= function(match, p1, p2, p3, offset,
 	        break;
 	    }
 	}
-	return '{"'+p1+p2+'"'+p3;
+	return '"'+p1+p2+'"'+p3;
 }
 MeekLuaTableParser.prototype.replaceDigitKeyBrackets= function(match, p1, offset, string){
 	return p1.replace(/\[/,"\"").replace(/\]/,"\"");
