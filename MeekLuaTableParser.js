@@ -35,7 +35,15 @@ MeekLuaTableParser.prototype.handleMultipleTables= function(str){
 	return str;
 }
 MeekLuaTableParser.prototype.encloseHeaders= function(match, p1, p2, p3, offset, string){
-	//console.log(p1);console.log(p2);console.log(p3);
+	console.log(p1);console.log(p2);console.log(p3);
+    p1 = p1.replace(/^\s+/, '');//Remove any leading spaces.
+    //Remove any trailing spaces
+	for (var i = p2.length - 1; i >= 0; i--) {
+	    if (/\S/.test(p2.charAt(i))) {
+	        p2 = p2.substring(0, i + 1);
+	        break;
+	    }
+	}
 	return '{"'+p1+p2+'"'+p3;
 }
 MeekLuaTableParser.prototype.replaceDigitKeyBrackets= function(match, p1, offset, string){
